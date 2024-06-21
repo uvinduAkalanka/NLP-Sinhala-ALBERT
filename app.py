@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import torch ,os
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
 # Load the model and tokenizer
 def get_classifier():
@@ -35,18 +37,18 @@ def analyze():
     try:
         # Get the text input from the query parameters
         text = request.args.get('text')
-        print(f"Received text: {text}")  # Debug print statement
+        print(f"Received text: {text}")  
         if not text:
             return jsonify({'error': 'No text provided'}), 400
 
         # Perform sentiment analysis
         result = classifier(text)
-        print(f"Analysis result: {result}")  # Debug print statement
+        print(f"Analysis result: {result}")  
         
         # Return the result as JSON
         return jsonify(result)
     except Exception as e:
-        print(f"Error: {str(e)}")  # Debug print statement
+        print(f"Error: {str(e)}")  
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
